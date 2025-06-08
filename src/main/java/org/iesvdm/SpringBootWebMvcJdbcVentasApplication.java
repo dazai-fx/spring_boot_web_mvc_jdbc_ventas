@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.iesvdm.dao.ClienteDAO;
+import org.iesvdm.dao.ComercialDAO;
 import org.iesvdm.modelo.Cliente;
+import org.iesvdm.modelo.Comercial;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +20,8 @@ public class SpringBootWebMvcJdbcVentasApplication implements CommandLineRunner{
 
 	@Autowired
 	private ClienteDAO clienteDAO;
+	@Autowired
+	private ComercialDAO comercialDAO;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootWebMvcJdbcVentasApplication.class, args);
@@ -32,8 +36,6 @@ public class SpringBootWebMvcJdbcVentasApplication implements CommandLineRunner{
 		log.info("*******************************");
 		log.info("*Prueba de arranque ClienteDAO*");
 		log.info("*******************************");
-
-		System.out.println("prueba 1");
 
 
 		int id = 1;
@@ -75,6 +77,51 @@ public class SpringBootWebMvcJdbcVentasApplication implements CommandLineRunner{
 
 		log.info("************************************");
 		log.info("*FIN: Prueba de arranque ClienteDAO*");
+		log.info("************************************");
+
+		log.info("*******************************");
+		log.info("*Prueba de arranque ComercialDAO*");
+		log.info("*******************************");
+
+		int idComercial = 1;
+		Optional<Comercial> comercial = comercialDAO.find(idComercial);
+
+		if (comercial.isPresent()) {
+			log.info("Comercial {}: {}", idComercial, comercial.get());
+
+			String nombreComercialOld = comercial.get().getNombre();
+
+			comercial.get().setNombre("Manuel M");
+
+			comercialDAO.update(comercial.get());
+
+			comercial = comercialDAO.find(idComercial);
+
+			log.info("Comercial {}: {}", idComercial, comercial.get());
+
+			//Volvemos a cargar el nombre antiguo..
+			comercial.get().setNombre(nombreComercialOld);
+			comercialDAO.update(comercial.get());
+
+		}
+
+		// Como es un comercial nuevo a persistir, id a 0
+		Comercial comercialNew = new Comercial(0, "Javier", "Robles", "Manzan", 0.2f);
+
+		//create actualiza el id
+		comercialDAO.create(comercialNew);
+
+		log.info("Comercial nuevo con id = {}", comercialNew.getId());
+
+		comercialDAO.getAll().forEach(c -> log.info("Comercial: {}", c));
+
+		//borrando por el id obtenido de create
+		comercialDAO.delete(comercialNew.getId());
+
+		comercialDAO.getAll().forEach(c -> log.info("Comercial: {}", c));
+
+		log.info("************************************");
+		log.info("*FIN: Prueba de arranque ComercialDAO*");
 		log.info("************************************");
 
 	}

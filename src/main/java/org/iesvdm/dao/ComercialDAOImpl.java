@@ -1,5 +1,6 @@
 package org.iesvdm.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,8 @@ import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Comercial;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import lombok.AllArgsConstructor;
@@ -24,8 +27,26 @@ public class ComercialDAOImpl implements ComercialDAO {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public void create(Comercial cliente) {
-		// TODO Auto-generated method stub
+	public void create(Comercial comercial) {
+
+		String sqlInsert = """
+							INSERT INTO cliente (nombre, apellido1, apellido2, comision) 
+							VALUES  (     ?,         ?,         ?,       ?,         ?)
+						   """;
+
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		//Con recuperación de id generado
+		int rows = jdbcTemplate.update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[] { "id" });
+			int idx = 1;
+			ps.setString(idx++, comercial.getNombre());
+			ps.setString(idx++, comercial.getApellido1());
+			ps.setString(idx++, comercial.getApellido2());
+			ps.setFloat(idx++, comercial.getComision());
+			return ps;
+		},keyHolder);
+
+		comercial.setId(keyHolder.getKey().intValue());
 
 	}
 
@@ -38,7 +59,7 @@ public class ComercialDAOImpl implements ComercialDAO {
                 							  rs.getString("nombre"), 
                 							  rs.getString("apellido1"),
                 							  rs.getString("apellido2"), 
-                							  rs.getFloat("comisión"))
+                							  rs.getFloat("comision"))
                 						 	
         );
 		

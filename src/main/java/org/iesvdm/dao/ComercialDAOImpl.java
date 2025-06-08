@@ -47,7 +47,7 @@ public class ComercialDAOImpl implements ComercialDAO {
 		},keyHolder);
 
 		comercial.setId(keyHolder.getKey().intValue());
-
+		// preuba
 	}
 
 	@Override

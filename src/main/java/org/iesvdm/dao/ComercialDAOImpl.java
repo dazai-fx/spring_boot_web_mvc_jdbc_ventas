@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Comercial;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -73,21 +74,20 @@ public class ComercialDAOImpl implements ComercialDAO {
 	@Override
 	public Optional<Comercial> find(int id) {
 
-		Comercial comercial =  jdbcTemplate
-				.queryForObject("SELECT * FROM comercial WHERE id = ?"
-						, (rs, rowNum) -> new Comercial(rs.getInt("id"),
-								rs.getString("nombre"),
-								rs.getString("apellido1"),
-								rs.getString("apellido2"),
-								rs.getFloat("comision"))
-						, id
-				);
-
-		if (comercial != null) {
-			return Optional.of(comercial);}
-		else {
-			log.info("Comercial no encontrado.");
-			return Optional.empty(); }
+		try {
+			Comercial comercial =  jdbcTemplate
+					.queryForObject("SELECT * FROM comercial WHERE id = ?"
+							, (rs, rowNum) -> new Comercial(rs.getInt("id"),
+									rs.getString("nombre"),
+									rs.getString("apellido1"),
+									rs.getString("apellido2"),
+									rs.getFloat("comision"))
+							, id
+					);
+			return Optional.of(comercial);
+		} catch(EmptyResultDataAccessException e){
+			return Optional.empty();
+		}
 
 	}
 

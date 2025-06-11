@@ -1,8 +1,10 @@
 package org.iesvdm.controlador;
 
 import org.iesvdm.modelo.Comercial;
+import org.iesvdm.modelo.Pedido;
 import org.iesvdm.modelo.exception.ComercialNotFoundException;
 import org.iesvdm.service.ComercialService;
+import org.iesvdm.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,8 @@ public class ComercialController {
 
     @Autowired
     private ComercialService comercialService;
+    @Autowired
+    private PedidoService pedidoService;
 
     public ComercialController(ComercialService comercialService) {
         this.comercialService = comercialService;
@@ -40,9 +44,10 @@ public class ComercialController {
                                    RedirectAttributes ra) {
 
         try{
-
             Comercial comercial = comercialService.getOne(id);
+            List<Pedido> listPedidos = pedidoService.getAllByComercialID(id);
             model.addAttribute("comercial", comercial);
+            model.addAttribute("listaPedidos", listPedidos);
 
         } catch (ComercialNotFoundException e){
             e.printStackTrace();

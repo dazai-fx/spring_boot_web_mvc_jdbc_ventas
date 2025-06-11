@@ -16,6 +16,30 @@
             <p><strong>Apellidos:</strong> <span th:text="${comercial.apellido1} + ' ' + ${comercial.apellido2}"></span></p>
             <p><strong>Comisión</strong> <span th:text="${comercial.comision}"></span></p>
 
+            <div>
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Total</th>
+                        <th>fecha</th>
+                        <th>Nombre Cliente</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="pedido: ${listaPedidos}">
+                        <tr>
+                            <!--/* otra forma sería: <td>th:text="${user.id}"</td> */-->
+                            <td>[[${pedido.id}]]</td>
+                            <td>[[${pedido.total}]]</td>
+                            <td>[[${pedido.fecha}]]</td>
+                            <td><a class="link-primary" th:href="@{'/clientes/' + ${pedido.cliente.getId()}}"> [[${pedido.cliente.nombre}]] </a></td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+
             <div class="mt-4 text-center">
                 <a class="btn btn-primary me-2" th:href="@{/comerciales}">Volver a la lista</a>
                 <a class="btn btn-warning" th:href="@{'/comerciales/editar/' + ${comercial.id}}">Editar comercial</a>

@@ -5,6 +5,7 @@ import java.util.List;
 import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.exception.ClienteNotFoundException;
 import org.iesvdm.service.ClienteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 //prefijo.
 //@RequestMapping("/clientes")
 public class ClienteController {
-	
+	@Autowired
 	private ClienteService clienteService;
 	
 	//Se utiliza inyección automática por constructor del framework Spring.

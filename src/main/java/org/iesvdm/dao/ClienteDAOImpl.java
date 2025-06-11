@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.iesvdm.modelo.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -32,7 +33,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 		
 							//Desde java15+ se tiene la triple quote """ para bloques de texto como cadenas.
 		String sqlInsert = """
-							INSERT INTO cliente (nombre, apellido1, apellido2, ciudad, categoría) 
+							INSERT INTO cliente (nombre, apellido1, apellido2, ciudad, categoria) 
 							VALUES  (     ?,         ?,         ?,       ?,         ?)
 						   """;
 		
@@ -76,7 +77,7 @@ public class ClienteDAOImpl implements ClienteDAO {
                 						 	rs.getString("apellido1"),
                 						 	rs.getString("apellido2"),
                 						 	rs.getString("ciudad"),
-                						 	rs.getInt("categoría")
+                						 	rs.getInt("categoria")
                 						 	)
         );
 		
@@ -91,23 +92,25 @@ public class ClienteDAOImpl implements ClienteDAO {
 	 */
 	@Override
 	public Optional<Cliente> find(int id) {
-		
-		Cliente fab =  jdbcTemplate
-				.queryForObject("SELECT * FROM cliente WHERE id = ?"														
-								, (rs, rowNum) -> new Cliente(rs.getInt("id"),
-            						 						rs.getString("nombre"),
-            						 						rs.getString("apellido1"),
-            						 						rs.getString("apellido2"),
-            						 						rs.getString("ciudad"),
-            						 						rs.getInt("categoría")) 
-								, id
-								);
-		
-		if (fab != null) { 
-			return Optional.of(fab);}
-		else { 
-			log.info("Cliente no encontrado.");
-			return Optional.empty(); }
+
+		try {
+			Cliente fab = jdbcTemplate.queryForObject(
+					"SELECT * FROM cliente WHERE id = ?",
+					(rs, rowNum) -> new Cliente(
+							rs.getInt("id"),
+							rs.getString("nombre"),
+							rs.getString("apellido1"),
+							rs.getString("apellido2"),
+							rs.getString("ciudad"),
+							rs.getInt("categoria")
+					),
+					id
+			);
+			return Optional.of(fab);
+		} catch (EmptyResultDataAccessException e) {
+			log.info("Cliente no encontrado para id: " + id);
+			return Optional.empty();
+		}
         
 	}
 	/**
@@ -122,7 +125,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 														apellido1 = ?, 
 														apellido2 = ?,
 														ciudad = ?,
-														categoría = ?  
+														categoria = ?  
 												WHERE id = ?
 										""", cliente.getNombre()
 										, cliente.getApellido1()
@@ -132,7 +135,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 										, cliente.getId());
 		
 		log.info("Update de Cliente con {} registros actualizados.", rows);
-    
+
 	}
 
 	/**

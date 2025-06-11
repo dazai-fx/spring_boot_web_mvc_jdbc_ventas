@@ -1,0 +1,56 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrar Comerciales</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <style>
+        .container-fluid{
+            max-width: 1100px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid text-center">
+    <h1>Administrar Comerciales</h1>
+    <div class="mb-3">
+        <a class="h3 link-primary" th:href="@{/comerciales/nuevo}">Añadir comercial</a>
+    </div>
+    <div th:if="${message}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+    <div th:if="${error}" class="alert alert-danger text-center">
+        [[${error}]]
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Comision</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="comercial: ${listaComerciales}">
+                <tr>
+                    <!--/* otra forma sería: <td>th:text="${user.id}"</td> */-->
+                    <td>[[${comercial.id}]]</td>
+                    <td>[[${comercial.nombre}]]</td>
+                    <td>[[${comercial.apellido1}]] [[${comercial.apellido2}]]</td>
+                    <td>[[${comercial.comision}]]</td>
+                    <td>
+                        <a class="btn btn-info btn-sm me-2" th:href="@{'/comerciales/' + ${comercial.id}}">Ver detalles</a>
+                        <a class="btn btn-warning btn-sm me-2" th:href="@{'/comerciales/editar/' + ${comercial.id}}">Editar</a>
+                        <a class="btn btn-danger btn-sm" th:href="@{'/comerciales/eliminar/' + ${comercial.id}}">Eliminar</a>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

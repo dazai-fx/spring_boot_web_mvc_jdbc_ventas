@@ -1,22 +1,22 @@
--- DROP DATABASE IF EXISTS ventas;
--- CREATE DATABASE ventas CHARACTER SET utf8mb4;
--- USE ventas;
-
+DROP DATABASE IF EXISTS ventas;
+CREATE DATABASE ventas CHARACTER SET utf8mb4;
+USE ventas;
+/* He cambiado la columna categoría por categoria porque en mysql no soporta tildes*/
 CREATE TABLE cliente (
                          id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                          nombre VARCHAR(100) NOT NULL,
                          apellido1 VARCHAR(100) NOT NULL,
                          apellido2 VARCHAR(100),
                          ciudad VARCHAR(100),
-                         categoría INT UNSIGNED
+                         categoria INT UNSIGNED
 );
-
+/* He cambiado la columna comisión por comision porque en mysql no soporta tildes*/
 CREATE TABLE comercial (
                            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                            nombre VARCHAR(100) NOT NULL,
                            apellido1 VARCHAR(100) NOT NULL,
                            apellido2 VARCHAR(100),
-                           comisión FLOAT
+                           comision FLOAT
 );
 
 CREATE TABLE pedido (

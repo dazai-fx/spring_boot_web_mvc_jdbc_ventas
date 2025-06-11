@@ -1,0 +1,51 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Comercial</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+</head>
+<body>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Detalles del Comercial</h1>
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h5 class="card-title">Comercial ID: <span th:text="${comercial.id}"></span></h5>
+
+            <p><strong>Nombre:</strong> <span th:text="${comercial.nombre}"></span></p>
+            <p><strong>Apellidos:</strong> <span th:text="${comercial.apellido1} + ' ' + ${comercial.apellido2}"></span></p>
+            <p><strong>Comisión</strong> <span th:text="${comercial.comision}"></span></p>
+            <h2>Listado de pedidos</h2>
+            <div>
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Total</th>
+                        <th>fecha</th>
+                        <th>Nombre Cliente</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="pedido: ${listaPedidos}">
+                        <tr>
+                            <!--/* otra forma sería: <td>th:text="${user.id}"</td> */-->
+                            <td>[[${pedido.id}]]</td>
+                            <td>[[${pedido.total}]]</td>
+                            <td>[[${pedido.fecha}]]</td>
+                            <td><a class="link-primary" th:href="@{'/clientes/' + ${pedido.cliente.getId()}}"> [[${pedido.cliente.nombre}]] </a></td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a class="btn btn-primary me-2" th:href="@{/comerciales}">Volver a la lista</a>
+                <a class="btn btn-warning" th:href="@{'/comerciales/editar/' + ${comercial.id}}">Editar comercial</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

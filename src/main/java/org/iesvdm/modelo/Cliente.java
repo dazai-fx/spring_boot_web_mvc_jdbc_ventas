@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cliente {
-	
 	private long id;
 	private String nombre;
 	private String apellido1;
